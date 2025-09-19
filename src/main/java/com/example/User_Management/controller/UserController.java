@@ -19,16 +19,19 @@ public class UserController {
     // Create User API
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        userService.createUser(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     // Get User by ID API
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        User user = userService.getUserById(id);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // Get All Users API
@@ -41,17 +44,27 @@ public class UserController {
     // Update User API
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        User updatedUser = userService.updateUser(id, userDetails);
-        if (updatedUser != null) {
-            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        User existingUser = userService.getUserById(id);
+        if (existingUser != null) {
+            existingUser.setFirstName(userDetails.getFirstName());
+            existingUser.setLastName(userDetails.getLastName());
+            existingUser.setEmail(userDetails.getEmail());
+            userService.updateUser(existingUser);
+            return new ResponseEntity<>(existingUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // Delete User API
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        User existingUser = userService.getUserById(id);
+        if (existingUser != null) {
+            userService.deleteUser(existingUser.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

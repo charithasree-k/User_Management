@@ -1,21 +1,11 @@
 package com.example.User_Management.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-@Entity
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
-
-    // Getters and setters (You can use Lombok for this to reduce boilerplate code)
 
     public Long getId() {
         return id;
@@ -41,4 +31,5 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

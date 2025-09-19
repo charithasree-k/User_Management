@@ -1,36 +1,41 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.9'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.9'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-description = 'Demo project for Spring Boot'
+description = 'User Management Project with Spring Boot and JDBC'
 
 java {
-	toolchain {
+    toolchain {
         languageVersion = JavaLanguageVersion.of(21)
-	}
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral() {
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
+    }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation 'com.h2database:h2'
-    implementation 'com.mysql:mysql-connector-j'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.hibernate:hibernate-core:6.4.4.Final'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'com.mysql:mysql-connector-j:8.0.33'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
 }
+
+
 configurations.configureEach {
     resolutionStrategy {
         force 'org.apache.commons:commons-lang3:3.18.0'
@@ -38,5 +43,5 @@ configurations.configureEach {
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
